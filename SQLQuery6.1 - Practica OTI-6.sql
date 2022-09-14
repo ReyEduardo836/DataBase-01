@@ -154,3 +154,114 @@ SELECT *
 FROM Curso
 WHERE Tarifa BETWEEN 0 AND 100
 ORDER BY Tarifa
+
+/* 21) Obtener toda la información sobre los cursos de filosofía que ofrezcan 3 créditos y
+que tengan una tarifa que se encuentre entre cero y cien. Asimismo obtener toda la
+información existente sobre cualquier curso ofrecido por los departamentos de
+Informática y Ciencias de la Información o Filosofía. */
+SELECT *
+FROM Curso
+WHERE (NDepartamento = 'PHIL' AND Creditos = 3 AND Tarifa BETWEEN 0 AND 100) OR NDepartamento = 'CIS' 
+
+/* 22) Obtener toda la información sobre cualquier curso de Informática y Ciencias de la
+Información o cualquier curso de tarifa nula. Asimismo, obtener toda la información
+existente sobre cualquier curso que tenga tarifa igual a 50, 100, 150 o 200.*/
+SElECT *
+FROM Curso
+WHERE NDepartamento = 'CIS' OR Tarifa IS NULL OR Tarifa IN (50,100,150,200) 
+
+/* 23) Obtener toda la información existente sobre el nombre de los cursos y la
+identificación del departamento de todos los cursos que no sean ofrecidos por el
+departamento de Informática y Ciencias de la Información. Obtener también el
+nombre y la identificación del departamento de todos los cursos, con la excepción de
+aquellos ofrecidos por los departamentos de Informática y Ciencias de la
+Información y Filosofía.*/
+SELECT Nombre, NDepartamento
+FROM Curso
+WHERE NDepartamento != 'CIS'
+
+SELECT Nombre, NDepartamento
+FROM Curso
+WHERE NDepartamento NOT IN ('CIS', 'PHIL')
+
+/* 24) Obtener toda la información existente sobre los cursos de Teología con tarifa nula o
+de cualquier curso (independientemente de su departamento y tarifa) que tenga un
+valor de 6 créditos. Obtener también toda la información existente sobre los cursos
+de Teología con tarifa nula o que valgan 6 créditos.*/
+SELECT * 
+FROM Curso
+WHERE (NDepartamento = 'THEO' AND Tarifa = 0) OR  Creditos = 6
+
+SELECT * 
+FROM Curso
+WHERE (NDepartamento = 'THEO') AND (Tarifa = 0 OR Creditos = 6)
+
+/* 25) Obtener toda la información existente sobre los cursos que no pertenecen al
+departamento de Informática y Ciencias de la Información o sobre cualquier curso
+(independientemente de su departamento) que tenga tarifa nula y valga tres créditos.
+Obtener también toda la información disponible sobre todas la filas de la tabla
+CURSO, exceptuando los cursos de Informática y Ciencias de la Información que
+tengan tarifa nula.*/
+SELECT *
+FROM Curso
+WHERE (NDepartamento != 'CIS') OR (Tarifa != 0 AND Creditos != 3)
+
+SELECT * 
+FROM Curso
+EXCEPT
+SELECT * 
+FROM Curso
+WHERE NDepartamento = 'CIS' AND Tarifa = 0
+
+/* 26) Obtener toda la información existente sobre los cursos que valgan 2, 6 o 9 créditos.
+Obtener también toda la información de todos los cursos que no pertenecen a los
+departamentos de Teología o Informática y Ciencias de la Información */
+SELECT * 
+FROM Curso
+WHERE Creditos IN (2,6,9)
+
+SELECT * 
+FROM Curso
+WHERE NDepartamento NOT IN ('THEO', 'CIS')
+
+/* 27) Obtener toda la información existente sobre los cursos cuya tarifa se encuentre entre
+100 y 200, incluyendo ambos valores. Obtener también toda la información de todos
+los cursos con tarifa menor que 100 o mayor que 200. */
+SELECT *
+FROM Curso
+WHERE Tarifa BETWEEN 100 AND 200
+
+SELECT *
+FROM Curso
+WHERE Tarifa NOT BETWEEN 100 AND 200
+
+/* 28) Obtener toda la información existente sobre los cursos cuyo nombre comience con
+la letra C, obtener también toda la información de todos los cursos de los
+departamentos de Informática y Ciencias de la Información, Teología o Matemática
+que valgan tres ceditos y con tarifa entre 50 y 300 presentando el resultado ordenado
+por curso dentro de cada departamento. */
+SELECT * 
+FROM Curso
+WHERE Nombre LIKE 'C%'
+
+SELECT *
+FROM Curso
+WHERE NDepartamento IN ('CIS', 'THEO') AND Creditos = 3 AND Tarifa BETWEEN 50 AND 300
+ORDER BY NDepartamento, Nombre
+
+/* 29) Obtener la primera letra de todos los nombres de cursos de informática y Ciencias
+de la Información. Obtener también los caracteres que aparecen en las posiciones
+tercera, cuarta, quinta y sexta. Por ultimo mostrar los tutores del número de curso
+sin el primer carácter. */
+SELECT LEFT(Nombre, 1) 'LEFT', SUBSTRING(Nombre, 3, 4) 'SUBSTRING' 
+FROM Curso
+WHERE NDepartamento IN ('CIS')
+
+SELECT SUBSTRING(NombreProfesor, 2, LEN(NombreProfesor)) 'SUBSTRING'
+FROM Claustro
+
+/* 30) Obtener la longitud real de cada nombre de curso ofrecido por el departamento de
+Teología. */
+SELECT LEN(Nombre) 'Longitud del nombre'
+FROM Curso
+WHERE NDepartamento = 'THEO'
