@@ -49,7 +49,7 @@ CREATE TABLE Matricula(
 	Hora_Matricula TIME)
 
 CREATE TABLE Claustro(
-	NumeroProfesor CHAR(3) PRIMARY KEY,
+	NumeroProfesor CHAR(2) PRIMARY KEY,
 	NombreProfesor CHAR(15),
 	DomicilioProfesor VARCHAR(25),
 	FechaContratacion DATE,
@@ -95,6 +95,10 @@ ALTER TABLE Personal
 ADD FOREIGN KEY (NDepartamento) 
 REFERENCES Departamento(Nombre)
 
+ALTER TABLE Clase
+ADD FOREIGN KEY (NumProfesor)
+REFERENCES Claustro(NumeroProfesor)
+
 /*----------------------------*/
 
 
@@ -122,6 +126,17 @@ VALUES('C11', 'Introduccion a las CC.', 'Para novatos', 3, 100.00, 'CIS'),
 		('T22', 'Fundamentalismo', 'Para descuidados', 3, 90.00, 'THEO'),
 		('T33', 'Hedonismo', 'Para sanos', 3, 0.00, 'THEO'),
 		('T44', 'Comunismo', 'Para avaros', 6, 200.00, 'THEO')
+
+		
+-- Table Claustro
+INSERT INTO Claustro( NumeroProfesor, NombreProfesor, DomicilioProfesor, FechaContratacion, NumAyudantes, Sueldo, NDepartamento)
+VALUES ('06', 'KATHY PEPE', 'CALLE DE LAPIEDRA, 7', '1979-01-15', 2, 35000.00, 'PHIL'),
+		('10', 'JESSIE MARTIN', 'DR. DEL ESTE, 4', '1969-09-01', 1, 45000.00, 'THEO'),
+		('08', 'JOSE COHN', 'APTDO, CORREOS 1138', '1979-07-09', 2, 35000.00, 'CIS'),
+		('85', 'AL HARTLEY', 'CALLE DE LA PLATA', '1979-09-05', 7, 45000.00, 'CIS'),
+		('60', 'JULIA MARTIN', 'DR. ESTE, 4', '1969-09-01', 1, 45000.00, 'PHIL'),
+		('65', 'LISA BOBAK', 'CAMINO DE LA RISA, 77', '1981-09-06', NULL, 36000.00, 'THEO'),
+		('80', 'BARB HLAVATY', 'CALLE DEL SUR, 489', '1982-01-16', 3, 35000.00, 'CIS')
 
 
 -- Table Clase
@@ -158,6 +173,14 @@ VALUES ('C11', '01', '325', '1987-01-04', '09:41:30'),
 		('T11', '01', '800', '1987-12-15', '14:00:00')
 
 
--- Table Claustro
-INSERT INTO Claustro( NumeroProfesor, NombreProfesor, DomicilioProfesor, FechaContratacion, NumAyudantes, Sueldo, NDepartamento)
-VALUES ('06', 'KATHY PEPE', 'CALLE DE LAPIEDRA, 7', '1979-01-15', 2, 35000.00, 'PHIL'),		('10', 'JESSIE MARTIN', 'DR. DEL ESTE, 4', '1969-09-01', 1, 45000.00, 'THEO'),		('08', 'JOSE COHN', 'APTDO, CORREOS 1138', '1979-07-09', 2, 35000.00, 'CIS'),		('85', 'AL HARTLEY', 'CALLE DE LA PLATA', '1979-09-05', 7, 45000.00, 'CIS'),		('60', 'JULIA MARTIN', 'DR. ESTE, 4', '1969-09-01', 1, 45000.00, 'PHIL'),		('65', 'LISA BOBAK', 'CAMINO DE LA RISA, 77', '1981-09-06', NULL, 36000.00, 'THEO'),		('80', 'BARB HLAVATY', 'CALLE DEL SUR, 489', '1982-01-16', 3, 35000.00, 'CIS')-- Table PersonalINSERT INTO Personal ( Nombre, Cargo, Sueldo, NDepartamento)VALUES ('LUCAS', 'EVANG1', 53, 'THEO'),		('MARCOS', 'EVANG2', 52, 'THEO'),		('MATEO', 'EVANG3', 51, 'THEO'),		('DICK NIX', 'LADRON', 25001, 'PHIL'),		('HANK KISS', 'BUFON', 25000, 'PHIL'),		('JUAN', 'EVANG4', 54, 'THEO'),		('EUCLIDES', 'ATE. LAB.', 1000, NULL),		('ARQUIMIDES', 'ATE. LAB.', 200, NULL),		('DVINCI', 'ATE. LAB.', 500, NULL)
+-- Table Personal
+INSERT INTO Personal ( Nombre, Cargo, Sueldo, NDepartamento)
+VALUES ('LUCAS', 'EVANG1', 53, 'THEO'),
+		('MARCOS', 'EVANG2', 52, 'THEO'),
+		('MATEO', 'EVANG3', 51, 'THEO'),
+		('DICK NIX', 'LADRON', 25001, 'PHIL'),
+		('HANK KISS', 'BUFON', 25000, 'PHIL'),
+		('JUAN', 'EVANG4', 54, 'THEO'),
+		('EUCLIDES', 'ATE. LAB.', 1000, NULL),
+		('ARQUIMIDES', 'ATE. LAB.', 200, NULL),
+		('DVINCI', 'ATE. LAB.', 500, NULL)
