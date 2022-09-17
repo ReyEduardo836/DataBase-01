@@ -265,3 +265,126 @@ Teología. */
 SELECT LEN(Nombre) 'Longitud del nombre'
 FROM Curso
 WHERE NDepartamento = 'THEO'
+
+/* 31) Obtener el nombre y el cargo de cualquier miembro del personal que no esté
+asignado aun departamento existente */
+SELECT Nombre, Cargo
+FROM Personal 
+WHERE NDepartamento IS NULL
+
+/* 32) Obtener el nombre y el cargo de cualquier miembro del personal asignado a un
+departamento existente. */
+SELECT Nombre, Cargo
+FROM Personal
+WHERE NDepartamento IS NOT NULL
+
+/* 33) Obtener para cada departamento que ofrezca cursos, el identificador de ese
+departamento seguido del número, nombre y tarifa del departamento que organiza el
+curso con mayor tarifa. */
+SELECT Numero, Nombre, Tarifa, NDepartamento
+FROM Curso
+WHERE Tarifa IN (SELECT MAX(Tarifa) FROM Curso GROUP BY NDepartamento)
+ORDER BY Tarifa DESC, NDepartamento DESC
+
+/* 34) Obtener el numero de curso, nombre y tarifa de cada curso cuya tarifa sea menor
+que todos los salarios de todos los miembros del personal */
+SELECT Numero, Nombre, Tarifa
+FROM Curso
+WHERE Tarifa < (SELECT SUM(Sueldo) FROM Personal)
+
+/* 35) Obtener el número de curso, nombre y tarifa de cada curso cuya tarifa exceda del
+salario del cualquier miembro del personal. */
+SELECT Numero, Nombre, Tarifa
+FROM Curso
+WHERE Tarifa > ANY(SELECT Sueldo
+					FROM Personal)
+
+/* 36) Obtener para cada departamento que ofrezca cursos, el identificador de
+departamento y la tarifa media de los cursos ofrecidos por el departamento, siempre
+y cuando sea mayor que la tarifa media de todas las tarifas de cursos*/
+SELECT NDepartamento, AVG(Tarifa)
+FROM Curso
+GROUP BY NDepartamento
+HAVING AVG(Tarifa) > (SELECT AVG(Tarifa)
+						FROM Curso)
+
+/* 37) Obtener el numero, cargo e identificador de cada departamento de cada miembro del
+personal asignado a un departamento no existente (sin identificador) */
+SELECT Id, Nombre, Cargo, NDepartamento
+FROM Personal
+WHERE NDepartamento NOT IN (SELECT Nombre FROM Departamento) OR NDepartamento IS NULL
+
+/* 38) Obtener el número y nombre de cualquier miembro de la facultad que sea jefe de
+cualquier departamento que ofrezca un curso de seis créditos. */
+SELECT NumeroProfesor, NombreProfesor
+FROM Claustro c INNER JOIN Departamento d ON c.NumeroProfesor = d.Director
+INNER JOIN Curso cur ON c.NDepartamento = cur.NDepartamento
+WHERE cur.Creditos = 6
+
+/* 39) Obtener el nombre y cargo de cada miembro del personal que trabaja en el edificio
+de Humanidades. */
+SELECT p.Nombre, p.Cargo
+FROM Personal p INNER JOIN Departamento d ON p.NDepartamento = d.Nombre AND d.Edificio = 'HU'
+
+/* 40) Obtener el número, nombre y tarifa de los cursos con tarifa mayor o igual que el
+sueldo de cualquier miembro del personal.*/
+SELECT Numero, Nombre, Tarifa
+FROM Curso
+WHERE Tarifa >= ANY (SElECT Sueldo FROM Personal)
+
+/* 41) Obtener el número, nombre y tarifa de los cursos con tarifa menor que la media.*/
+SELECT Numero, Nombre, Tarifa
+FROM Curso
+WHERE Tarifa < (SELECT AVG(Tarifa) FROM Curso)
+
+/* 42) Obtener el número, nombre y tarifa de los cursos con tarifa mínima no nula.*/
+SELECT Numero, Nombre, Tarifa
+FROM Curso
+WHERE Tarifa = 0
+
+/* 43) Obtener el nombre de la base de datos actual */
+SELECT DB_Name()
+
+/* 44) Obtener la fecha actual del sistema */
+PRINT GETDATE()
+
+/*45) Lista de los meses en que se efectuaron las matriculas */
+SELECT MONTH(Fecha_Matricula)
+FROM Matricula
+
+/* 46) Hora de la matriculación de los alumnos, primeramente con horas y minutos y
+después con horas, minutos y segundos. */
+SELECT DATEPART(Hour, Hora_Matricula)
+FROM Matricula
+
+/* 47) Presentar las ciudades donde se encuentras las oficinas con su nombre inicial, en
+mayúsculas, en minúsculas y el numero de caracteres. */
+SELECT Domicilio,LOWER(Domicilio) 'MINUSCULA', UPPER(Domicilio) 'MAYUSCULA', LEN(Domicilio) 'N.Caracteres'
+FROM Estudiante
+
+/* 48)Buscar aquellos números de curso que están en la tabla MATRICULA y en la tabla
+CLASE (operación intersección) */
+SELECT NumCurso
+FROM Matricula
+UNION
+SELECT NumCurso
+FROM Clase
+INTERSECT
+SELECT Numero
+FROM Curso
+
+/* 49) Presentar los números de curso que están en la tabla CLASE y no están en la tabla
+MATRICULA (operación diferencia).*/
+SELECT NumCurso
+FROM Clase
+EXCEPT
+SELECT NumCurso
+FROM Matricula
+
+/* 50) Listar aquellos números de curso que están en la tabla MATRICULA o en la tabla
+CLASE (operación unión) */
+SELECT NumCurso
+FROM Matricula
+UNION
+SELECT NumCurso
+FROM Clase
