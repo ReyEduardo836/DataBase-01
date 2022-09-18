@@ -388,3 +388,93 @@ FROM Matricula
 UNION
 SELECT NumCurso
 FROM Clase
+
+/* 51) Visualizar el nombre e identificador de departamento de cualquier catedrático que
+tenga un numero de profesores ayudantes mayor que la media de créditos para
+cursos ofrecidos por su departamento. */
+
+SELECT NombreProfesor, NDepartamento
+FROM Claustro cl
+WHERE NumAyudantes > (SELECT AVG(Creditos) 
+							FROM Curso cu
+							GROUP BY NDepartamento
+							HAVING cl.NDepartamento = cu.NDepartamento)
+
+/* 52) Visualizar el nombre, identificador de cada departamento y salario de aquellos
+miembros de la facultad cuyo salario es mayor que el salario medio de su
+departamento. */
+SELECT * 
+FROM Claustro cl1
+WHERE Sueldo > (SELECT AVG(Sueldo)
+				FROM Claustro cl2
+				GROUP BY NDepartamento
+				HAVING cl1.NDepartamento = cl2.NDepartamento)
+
+/* 53) Visualizar el numero de estudiantes y la fecha de MATRICULA de todos los
+estudiantes que están matriculados de al menos un curso ofrecido por un
+departamento ubicado en el edificio Ciencias SC. */
+SELECT Numero, Fecha_Matricula
+FROM Estudiante e INNER JOIN Departamento d ON e.NDepartamento = d.Nombre AND d.Edificio = 'SC'
+INNER JOIN Matricula m ON e.Numero = m.NumEstudiante
+
+/*54) Visualizar el nombre y número de ayudantes para aquellos miembros de la facultad
+que tienen tantos ayudantes como el número de créditos ofrecidos por cualquier
+curso. */
+SELECT NombreProfesor, NumAyudantes
+FROM Claustro
+WHERE NumAyudantes = SOME (SELECT Creditos
+							FROM Curso)
+
+/* 55) Visualizar el nombre y el identificador de departamento de cualquier miembro del
+claustro asignado a un departamento que ofrezca un curso de 6 créditos */
+SELECT NombreProfesor, NDepartamento
+FROM Claustro cl
+WHERE EXISTS(SELECT *
+			FROM Curso cu
+			WHERE cl.NDepartamento = cu.NDepartamento AND Creditos = 6)
+
+/* 56) Visualizar el nombre y el identificador de departamento de cualquier miembro del
+claustro asignado a un departamento que no ofrezca un curso de 6 créditos.*/
+SELECT NombreProfesor, NDepartamento
+FROM Claustro cl
+WHERE NOT EXISTS(SELECT *
+			FROM Curso cu
+			WHERE cl.NDepartamento = cu.NDepartamento AND Creditos = 6)
+
+/* 57) Visualizar el nombre y el departamento de cualquier miembro de la facultad que no
+esté impartiendo clases durante este semestre */
+SELECT NombreProfesor, NDepartamento
+FROM Claustro cl
+WHERE NOT EXISTS(SELECT * 
+				FROM Clase c
+				WHERE cl.NumeroProfesor = c.NumProfesor)
+
+/* 58) Visualizar el número de curso y nombre en donde se halle registrado el estudiante
+800.*/ 
+SELECT NumCurso, Nombre
+FROM Estudiante e INNER JOIN Matricula m ON e.Numero = m.NumEstudiante AND e.Numero = 800
+
+/* 59) Visualizar toda la información acerca de cualquier curso de Informática y Ciencias
+de la Información con una tarifa menor que el sueldo medio de cualquiera asignado
+al departamento de Teología */
+SELECT * 
+FROM Curso
+WHERE NDepartamento = 'CIS'
+AND Tarifa < (SELECT AVG(Tarifa)
+				FROM Curso
+				GROUP BY NDepartamento
+				HAVING NDepartamento = 'THEO')
+
+/* 60) Visualizar el nombre y el salario de cualquier empleado miembro del personal cuyo
+sueldo sea menor o igual que la máxima tarifa del curso. */
+SELECT Nombre, Sueldo
+FROM Personal
+WHERE Sueldo <= (SELECT MAX(Tarifa)
+				FROM Curso)
+
+/* 61) Visualizar el nombre, número, departamento y tarifa de los cursos que tienen la
+segunda tarifa mas cara sabiendo que la tarifa mas cara es 500. */
+SELECT TOP 1 WITH TIES *
+FROM Curso
+WHERE Tarifa < 500
+ORDER BY Tarifa DESC
