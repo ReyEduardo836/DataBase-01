@@ -478,3 +478,103 @@ SELECT TOP 1 WITH TIES *
 FROM Curso
 WHERE Tarifa < 500
 ORDER BY Tarifa DESC
+
+/* 62) Visualizar el número, nombre y departamento de los cursos con la mínima tarifa.*/
+SELECT TOP 1 WITH TIES Numero, Nombre, NDepartamento
+FROM Curso
+ORDER BY Tarifa ASC
+
+/* 63) Hallar la tarifa media para aquellos departamentos en los que dicha tarifa media sea
+mayor que 100 y que ofrezcan menos de seis cursos. */
+SELECT AVG(Tarifa)
+FROM Curso c1
+GROUP BY NDepartamento
+HAVING AVG(Tarifa) > 100
+		AND (SELECT COUNT(*) 
+		FROM Curso c2
+		GROUP BY NDepartamento
+		HAVING c1.NDepartamento = c2.NDepartamento) < 6
+
+/* 64) Hallar las tarifas media, máxima y mínima por crédito dentro de cada departamento
+sólo para aquellos grupos con tarifa mínima positiva */
+SELECT MIN(Tarifa) TarifaMinima, MAX(Tarifa) TarifaMaxima, AVG(Tarifa) TarifaMedia, NDepartamento, Creditos
+FROM Curso
+GROUP BY NDepartamento, Creditos
+HAVING MIN(Tarifa) > 0
+
+/* 65) Pata todos los departamentos excepto el de Teología, que tengan una tarifa media de
+sus cursos mayor que 100, obtener su identificación y su tarifa media. */
+SELECT AVG(Tarifa), NDepartamento
+FROM Curso
+GROUP BY NDepartamento
+HAVING AVG(Tarifa) > 100
+AND NDepartamento != 'THEO'
+
+/* 66) Para cada valor distinto de tarifa determinar el numero total de créditos para los
+cursos que tengas ese valor de tarifa. Ordenar el resultado en secuencia descendente
+por tarifa */
+SELECT SUM(Creditos) NumTotalCreditos, Tarifa
+FROM Curso
+GROUP BY (Tarifa)
+ORDER BY Tarifa DESC
+
+/* 67) Para cada departamento que ofrezca determinar el valor medio de la tarifa de todos
+los cursos que tengas tres créditos ofrecidos por cada departamento. Visualizar la
+salida en secuencia ascendente por identificación de departamento. */
+SELECT AVG(Tarifa) ValorMedioTarifa, Creditos, NDepartamento
+FROM Curso
+GROUP BY Creditos, NDepartamento
+HAVING Creditos = 3
+ORDER BY NDepartamento ASC
+
+/* 68) Para cada departamento al que se hace referencia en la tabla PERSONAL formar un
+comité compuesto por dos miembros del personal del departamento de modo que,
+para cada posible pareja de miembros del personal se visualice su código de
+departamento seguido de los nombres de los miembros del personal. El resultado
+debe contener una fila por cada posible pareja de miembros del personal. */
+
+/*69) Para cualquier curso que tenga un miembro del personal disponible para ser tutor,
+visualizar el número, nombres y cargos de los miembros del personal que pueden
+servir de tutores para ese curso y la ubicación de sus respectivos edificios y
+despachos. Clasificar la salida por nombre de los miembros del personal y número
+de curso.*/
+SELECT Id, Nombre, Cargo
+FROM Personal
+WHERE NDepartamento IS NULL
+ORDER BY Nombre
+
+/* 70) Para cada departamento que ofrece servicios de tutoría, visualizar el identificador de
+departamento junto con la tarifa media de los cursos que éste ofrece y el sueldo
+medio de los miembros del personal que pueden autorizar dichos cursos. Clasificar
+la salida por identificador de departamento.*/
+SELECT NDepartamento, AVG(Tarifa) TarifaMedia, (SELECT AVG(Sueldo)
+									FROM Claustro cl
+									GROUP BY NDepartamento
+									HAVING cl.NDepartamento = cu.NDepartamento) SueldoMedio
+FROM Curso cu
+GROUP BY NDepartamento
+
+/* 71) Visualizar el nombre y cargo de cada miembro del personal que trabaje en el
+edificio de Humanidades. */
+SELECT p.Nombre, p.Cargo
+FROM Personal p INNER JOIN Departamento d ON p.NDepartamento = d.Nombre
+WHERE d.Edificio = 'HU'
+
+/* 72) Para cada curso con una tarifa superior a 175, mostrar el nombre del curso, tarifa y
+numero de facultativo del jefe responsable del curso, visualizando la salida en orden
+ascendente por nombre de curso.*/
+SELECT c.Nombre, c.Tarifa, d.Director
+FROM Curso c INNER JOIN Departamento d ON c.NDepartamento = d.Nombre
+WHERE Tarifa > 175
+ORDER BY c.Nombre ASC
+
+/* 73) Para cada miembro del personal cuyo salario anual excede de 1000 visualizar su
+nombre, código de departamento y edificio de destino*/
+SELECT p.Nombre, p.NDepartamento, d.Edificio
+FROM Personal p INNER JOIN Departamento d ON p.NDepartamento = d.Nombre
+WHERE Sueldo*12 > 1000
+
+/* 74) De todo el personal asignado a los actuales departamentos, seleccionar toda la
+información acerca del personal y sus respectivos departamentos.*/
+SELECT *
+FROM Personal p INNER JOIN Departamento d ON p.NDepartamento = d.Nombre
