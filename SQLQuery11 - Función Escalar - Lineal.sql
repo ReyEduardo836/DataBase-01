@@ -44,6 +44,22 @@ BEGIN
 END
 
 SELECT dbo.fn_cordobas(30,26.2) AS CORDOBAS
+
+-- visualizar la recaudacion de las ordenes en un anio determinado --TODO--
+alter FUNCTION dbo.Ordenes(@anio int)
+RETURNS @table TABLE([Year] VARCHAR(4) PRIMARY KEY, Cordobas MONEY, Dolares MONEY)
+AS
+	BEGIN
+		INSERT @table
+		SELECT YEAR(OrderDate), (SUM(od.Quantity*od.UnitPrice) / 35.6)- SUM(((od.Quantity*od.UnitPrice / 35.6)* od.Discount)) , SUM(od.Quantity*od.UnitPrice)
+		FROM Orders o INNER JOIN [Order Details] od ON o.OrderID = od.OrderID
+		WHERE YEAR(OrderDate) = @anio
+		GROUP BY YEAR(OrderDate)
+		RETURN
+	END
+	select * from [Order Details]
+
+	select * from dbo.Ordenes(1996) as meme
 /******************************************************/
 --Funciones con valores de tablas de varias instrucciones
 --Crear una funcion que ingrese "C" (corto) si se desea visualizar solo el ID y apellido
