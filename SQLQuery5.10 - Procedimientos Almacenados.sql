@@ -101,7 +101,7 @@ AS
   GROUP BY E.LastName,P.ProductName
   ORDER BY E.LastName,P.ProductName
 
-EXEC frase 'Q%'  /******OJO*****/
+EXEC frase 'Q%'  /*******OJO******/
 /************************************************************************/
 /*--Mostrar las cantidades de ordenes en un determinado año, cuyo envío sea menor a los días X transcurridos*/
  Select * from Orders
