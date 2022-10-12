@@ -15,6 +15,19 @@ from disk ='D:\Respaldos BD\Northwind.bak'
 with replace */
 use Northwind
 
+--Modelo de recuperacion Completa
+/*Alter Database Northwind
+Set RECOVERY FULL*/
+
+--Modelo de recuperacion Registro Masivo
+Alter Database Northwind
+Set RECOVERY BULK_LOGGED
+
+--Modelo de recuperacion Simple 
+--Log de transacciones es pequeño y no permite hacer backup de Log de Trasacciones
+/*Alter Database Northwind
+Set Recovery SIMPLE*/
+
 Backup database Northwind
 to disk = 'D:\Respaldos BD\Northwind.bak'
 with 
@@ -31,7 +44,7 @@ Create table Respaldo (Id int)
 Backup database Northwind
 to disk = 'D:\Respaldos BD\Northwind.bak'
 with 
-name = 'Backup Diferencial I',
+name = 'Backup Diferencial 2',
 Description= 'Backup Diferencial Northwind 10/10/2022',
 Differential
 
