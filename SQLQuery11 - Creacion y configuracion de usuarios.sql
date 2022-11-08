@@ -6,7 +6,8 @@ CREATE LOGIN Especialista WITH PASSWORD = '1234'
 
 USE Northwind
 GO 
-SP_ADDUSER Especialista
+-- SP_ADDUSER <LoginName>, <NameInDB>
+SP_ADDUSER Especialista, Especialista
 GRANT SELECT ON Employees TO Especialista
 GRANT SELECT ON Orders TO Especialista
 GRANT INSERT ON Employees TO Especialista
