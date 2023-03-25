@@ -100,3 +100,31 @@ go
 
 Select * from Respaldo
 
+---------------------------------------------------------------------
+-- para trabajar con un archivo.bak el cual fue trabajado en otra
+-- maquina o instancia
+
+restore filelistonly 
+from disk = 'D:\Respaldos BD\Northwind.bak'
+
+restore headeronly 
+from disk = 'D:\Respaldos BD\Northwind.bak'
+
+restore database Northwind 
+from disk = 'D:\Respaldos BD\Northwind.bak'
+with 
+move 'Northwind' to 'D:\Respaldos BD\Northwind_files\Northwind.mdf',
+move 'Northwind_2' to 'D:\Respaldos BD\Northwind_files\Northwind.ndf',
+move 'Northwind_log' to 'D:\Respaldos BD\Northwind_files\Northwind.ldf'
+
+backup database Northwind 
+to disk = 'D:\Respaldos BD\NorthwindRespaldo.bak'
+
+use master
+go 
+drop database Northwind
+go
+
+restore database Northwind 
+from disk = 'D:\Respaldos BD\NorthwindRespaldo.bak'
+
