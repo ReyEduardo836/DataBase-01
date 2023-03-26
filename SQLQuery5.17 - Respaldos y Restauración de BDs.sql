@@ -115,7 +115,8 @@ from disk = 'D:\Respaldos BD\Northwind.bak'
 with 
 move 'Northwind' to 'D:\Respaldos BD\Northwind_files\Northwind.mdf',
 move 'Northwind_2' to 'D:\Respaldos BD\Northwind_files\Northwind.ndf',
-move 'Northwind_log' to 'D:\Respaldos BD\Northwind_files\Northwind.ldf'
+move 'Northwind_log' to 'D:\Respaldos BD\Northwind_files\Northwind.ldf',
+replace
 
 backup database Northwind 
 to disk = 'D:\Respaldos BD\NorthwindRespaldo.bak'
